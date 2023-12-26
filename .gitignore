@@ -1,0 +1,5 @@
+.vs
+*.sln
+CraftingSpeed/bin/
+CraftingSpeed/obj/
+Libraries/
