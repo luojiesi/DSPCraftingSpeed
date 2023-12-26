@@ -1,5 +1,6 @@
 .vs
 *.sln
+*.dll
 CraftingSpeed/bin/
 CraftingSpeed/obj/
 Libraries/
