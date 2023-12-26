@@ -1,0 +1,10 @@
+{
+    "name": "CraftingSpeedMod",
+    "version_number": "1.0.1",
+    "website_url": "https://github.com/luojiesi/DSPCraftingSpeed",
+    "description": "This mod lets you control the crafting speed for assemblers, from 1% to 100%.",
+    "dependencies": [
+        "xiaoye97-BepInEx-5.4.17",
+        "CommonAPI-DSPModSave-1.2.0"
+    ]
+}
