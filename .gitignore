@@ -1,6 +1,8 @@
 .vs
 *.sln
 *.dll
+*.rar
+*.zip
 CraftingSpeed/bin/
 CraftingSpeed/obj/
 Libraries/
