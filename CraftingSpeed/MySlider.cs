@@ -40,7 +40,7 @@ namespace CraftingSpeed
             sl._value = 100;
             RectTransform rect = (RectTransform)sl.transform;
             rect.SetParent(parent, false);
-            rect.anchoredPosition = new Vector3(300, 120);
+            rect.anchoredPosition = new Vector3(310, 220);
 
             rect.sizeDelta = new Vector2(150, 20);
 
