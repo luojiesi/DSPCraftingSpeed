@@ -1,3 +1,5 @@
+* 1.1.1
+  * Fix: the speed slider's handle now reaches both ends (100% at the right end, 0.1% at the left end).
 * 1.1.0
   * Speed limits are saved in blueprints (through BlueprintTweaks' custom blueprint data) and applied when pasting,
     also to machines that are still under construction.

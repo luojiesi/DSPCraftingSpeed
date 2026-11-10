@@ -266,6 +266,31 @@ namespace CraftingSpeed.InGameTests
                     Check(ctx.Limit(ctx.A) == 600, "moving the slider sets the limit");
                 }
                 yield return Shot("window-after-controls");
+
+                // The handle must reach both ends of the slider and the fill must end under it.
+                if (slider != null)
+                {
+                    var sliderRect = (RectTransform)slider.transform;
+                    Rect track = sliderRect.rect;
+                    float CenterX(RectTransform r) { var c = new Vector3[4]; r.GetWorldCorners(c); return sliderRect.InverseTransformPoint((c[0] + c[2]) / 2f).x; }
+                    float RightX(RectTransform r) { var c = new Vector3[4]; r.GetWorldCorners(c); return sliderRect.InverseTransformPoint(c[2]).x; }
+                    float LeftX(RectTransform r) { var c = new Vector3[4]; r.GetWorldCorners(c); return sliderRect.InverseTransformPoint(c[0]).x; }
+
+                    ctx.SetLimit(ctx.A, 1000);
+                    yield return Frames(3);
+                    float handleRight = RightX(slider.handleRect), handleMid = CenterX(slider.handleRect), fillEnd = RightX(slider.fillRect);
+                    Line($"  100%: slider x {track.xMin:0.0}..{track.xMax:0.0}, handle right edge {handleRight:0.0}, centre {handleMid:0.0}, fill ends {fillEnd:0.0}");
+                    Check(Mathf.Abs(handleRight - track.xMax) <= 1.5f, "at 100% the handle reaches the right end");
+                    Check(Mathf.Abs(fillEnd - handleMid) <= 1.5f, "at 100% the fill ends under the handle");
+                    yield return Shot("window-slider-100");
+
+                    ctx.SetLimit(ctx.A, 1);
+                    yield return Frames(3);
+                    float handleLeft = LeftX(slider.handleRect);
+                    Line($"  0.1%: handle left edge {handleLeft:0.0}, centre {CenterX(slider.handleRect):0.0}");
+                    Check(Mathf.Abs(handleLeft - track.xMin) <= 1.5f, "at 0.1% the handle reaches the left end");
+                    yield return Shot("window-slider-0.1");
+                }
             }
 
             ctx.SetLimit(ctx.A, 1000);

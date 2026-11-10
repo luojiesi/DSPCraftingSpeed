@@ -173,14 +173,39 @@ namespace CraftingSpeed
             if (slider.handleRect != null)
             {
                 // Without its number the handle is just a wide dark box; make it a thin bright bar.
-                slider.handleRect.sizeDelta = new Vector2(6f, slider.handleRect.sizeDelta.y);
+                slider.handleRect.sizeDelta = new Vector2(HandleWidth, slider.handleRect.sizeDelta.y);
                 Image handle = slider.handleRect.GetComponent<Image>();
                 if (handle != null) handle.color = new Color(1f, 1f, 1f, 0.85f);
+
+                // The copied slider insets the handle's track by half of its old, wide handle, so a thin
+                // handle stopped well short of both ends. Inset by half of the new handle instead, so
+                // 100% sits at the right end and the minimum at the left end.
+                Inset(slider.handleRect.parent as RectTransform, HandleWidth / 2f, "handle track");
+            }
+            if (slider.fillRect != null)
+            {
+                // Same for the fill: it should end exactly under the handle's centre.
+                Inset(slider.fillRect.parent as RectTransform, HandleWidth / 2f, "fill area");
+                slider.fillRect.offsetMin = new Vector2(0f, slider.fillRect.offsetMin.y);
+                slider.fillRect.offsetMax = new Vector2(0f, slider.fillRect.offsetMax.y);
             }
 
             Image background = slider.transform.Find("Background")?.GetComponent<Image>();
             if (background != null) background.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
             sliderFill = slider.fillRect != null ? slider.fillRect.GetComponent<Image>() : null;
+        }
+
+        private const float HandleWidth = 6f;
+
+        /// <summary>Makes a horizontally stretched area span the slider width minus <paramref name="inset"/> on each side.</summary>
+        private static void Inset(RectTransform area, float inset, string what)
+        {
+            if (area == null) return;
+            Plugin.Log.LogDebug($"Slider {what} was anchors {area.anchorMin.x}-{area.anchorMax.x}, offsets {area.offsetMin.x}/{area.offsetMax.x}.");
+            area.anchorMin = new Vector2(0f, area.anchorMin.y);
+            area.anchorMax = new Vector2(1f, area.anchorMax.y);
+            area.offsetMin = new Vector2(inset, area.offsetMin.y);
+            area.offsetMax = new Vector2(-inset, area.offsetMax.y);
         }
 
         private static void MakeTargetInput(Transform parent)

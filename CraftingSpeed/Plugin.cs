@@ -17,7 +17,7 @@ namespace CraftingSpeed
         // Keep the GUID unchanged: DSPModSave stores this mod's save data under it.
         public const string Guid = "com.github.jiesiluo.assemblerspeed";
         public const string Name = "Crafting Speed";
-        public const string Version = "1.1.0";
+        public const string Version = "1.1.1";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<float> RowNudgeX;

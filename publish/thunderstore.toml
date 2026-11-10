@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "DSPCraftingSpeed"
 name = "CraftingSpeedMod"
-versionNumber = "1.1.0"
+versionNumber = "1.1.1"
 description = "Limit the crafting speed of individual assemblers (0.1% to 100%). Limits are saved in blueprints."
 websiteUrl = "https://github.com/luojiesi/DSPCraftingSpeed"
 containsNsfwContent = false

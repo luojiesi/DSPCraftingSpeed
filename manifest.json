@@ -1,6 +1,6 @@
 {
     "name": "CraftingSpeedMod",
-    "version_number": "1.1.0",
+    "version_number": "1.1.1",
     "website_url": "https://github.com/luojiesi/DSPCraftingSpeed",
     "description": "Limit the crafting speed of individual assemblers (0.1% to 100%). Limits are saved in blueprints.",
     "dependencies": [
