@@ -1,0 +1,39 @@
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "DSPCraftingSpeed"
+name = "CraftingSpeedMod"
+versionNumber = "1.1.0"
+description = "Limit the crafting speed of individual assemblers (0.1% to 100%). Limits are saved in blueprints."
+websiteUrl = "https://github.com/luojiesi/DSPCraftingSpeed"
+containsNsfwContent = false
+
+[package.dependencies]
+xiaoye97-BepInEx = "5.4.17"
+CommonAPI-DSPModSave = "1.2.2"
+kremnev8-BlueprintTweaks = "1.6.13"
+
+[build]
+icon = "../icon.png"
+readme = "../README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "../CraftingSpeed/bin/Release/CraftingSpeed.dll"
+target = "plugins/CraftingSpeed.dll"
+
+[[build.copy]]
+source = "../CraftingSpeedPreloader/bin/Release/CraftingSpeedPreloader.dll"
+target = "patchers/CraftingSpeedPreloader.dll"
+
+[[build.copy]]
+source = "../CHANGELOG.md"
+target = "CHANGELOG.md"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["dyson-sphere-program"]
+
+[publish.categories]
+dyson-sphere-program = ["quality-of-life", "assembling-machines", "blueprints"]

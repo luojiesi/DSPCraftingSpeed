@@ -6,3 +6,6 @@
 bin/
 obj/
 Libraries/
+*.token
+publish/build/
+dist/

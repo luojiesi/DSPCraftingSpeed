@@ -1,6 +1,6 @@
 # Crafting Speed Mod
 
-Limit the crafting speed of individual assemblers, from 1% to 100%. Handy for building-supermarket
+Limit the crafting speed of individual assemblers, from 0.1% to 100%. Handy for building-supermarket
 lines where some buildings should be produced slowly, so every product line can run at the same time.
 
 * Open an assembler: a "Speed limit" row sits above your inventory.

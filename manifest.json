@@ -2,7 +2,7 @@
     "name": "CraftingSpeedMod",
     "version_number": "1.1.0",
     "website_url": "https://github.com/luojiesi/DSPCraftingSpeed",
-    "description": "Limit the crafting speed of individual assemblers (1% to 100%). Limits are saved in blueprints.",
+    "description": "Limit the crafting speed of individual assemblers (0.1% to 100%). Limits are saved in blueprints.",
     "dependencies": [
         "xiaoye97-BepInEx-5.4.17",
         "CommonAPI-DSPModSave-1.2.2",
