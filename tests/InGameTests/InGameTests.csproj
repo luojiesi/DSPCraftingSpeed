@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    In-game test runner. NOT part of the released package.
+    Install next to the mod (BepInEx/plugins), start the game, and it loads a save, runs the checks,
+    writes BepInEx/CraftingSpeedTests/report.txt plus screenshots, and quits. Saving is blocked
+    while it runs, so the save is never overwritten.
+  -->
+  <PropertyGroup>
+    <AssemblyName>CraftingSpeed.InGameTests</AssemblyName>
+    <RootNamespace>CraftingSpeed.InGameTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" HintPath="$(ManagedDir)\Assembly-CSharp.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(ManagedDir)\UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(ManagedDir)\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(ManagedDir)\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="UnityEngine.UIModule" HintPath="$(ManagedDir)\UnityEngine.UIModule.dll" Private="false" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(ManagedDir)\UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="UnityEngine.ScreenCaptureModule" HintPath="$(ManagedDir)\UnityEngine.ScreenCaptureModule.dll" Private="false" />
+    <Reference Include="BepInEx" HintPath="$(BepInExDir)\core\BepInEx.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(BepInExDir)\core\0Harmony.dll" Private="false" />
+    <Reference Include="DSPModSave" HintPath="$(BepInExDir)\plugins\CommonAPI-DSPModSave\DSPModSave.dll" Private="false" />
+    <Reference Include="BlueprintTweaks" HintPath="$(BepInExDir)\plugins\kremnev8-BlueprintTweaks\BlueprintTweaks.dll" Private="false" />
+    <ProjectReference Include="..\..\CraftingSpeed\CraftingSpeed.csproj" Private="false" />
+  </ItemGroup>
+
+</Project>

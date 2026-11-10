@@ -5,6 +5,8 @@ using BepInEx.Logging;
 using crecheng.DSPModSave;
 using HarmonyLib;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("CraftingSpeed.InGameTests")]
+
 namespace CraftingSpeed
 {
     [BepInPlugin(Guid, Name, Version)]
@@ -18,14 +20,14 @@ namespace CraftingSpeed
         public const string Version = "1.1.0";
 
         internal static ManualLogSource Log;
-        internal static ConfigEntry<float> RowOffsetX;
-        internal static ConfigEntry<float> RowOffsetY;
+        internal static ConfigEntry<float> RowNudgeX;
+        internal static ConfigEntry<float> RowNudgeY;
 
         private void Awake()
         {
             Log = Logger;
-            RowOffsetX = Config.Bind("UI", "RowOffsetX", 30f, "Left margin of the speed limit row in the assembler window, in pixels.");
-            RowOffsetY = Config.Bind("UI", "RowOffsetY", 0f, "Vertical nudge of the speed limit row (positive moves it up), in pixels.");
+            RowNudgeX = Config.Bind("UI", "RowNudgeX", 0f, "Move the speed limit row in the assembler window right (positive) or left, in pixels.");
+            RowNudgeY = Config.Bind("UI", "RowNudgeY", 0f, "Move the speed limit row up (positive) or down, in pixels.");
             SpeedLimit.Init();
             if (!SpeedLimit.Available) return;
 

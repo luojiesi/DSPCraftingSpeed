@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +28,7 @@ namespace CraftingSpeed
 
         private static readonly Color LimitedColor = new Color(1f, 0.68f, 0.28f, 1f);
         private static readonly Color FillNormal = new Color(1f, 1f, 1f, 0.28f);
+        private static readonly Color LabelColor = new Color(0.92f, 0.92f, 0.92f, 1f);
         private static readonly Color FillLimited = new Color(1f, 0.68f, 0.28f, 0.6f);
 
         private static RectTransform row;
@@ -62,7 +64,8 @@ namespace CraftingSpeed
         private static void Build(UIAssemblerWindow window)
         {
             speedTextColor = window.speedText.color;
-            Text style = window.stateText;
+            // Same look as the "增产效果" label on the line above, falling back to the status text.
+            Text style = window.incInfoGroup.GetComponentsInChildren<Text>(true).FirstOrDefault(t => t.name == "inc-label") ?? window.stateText;
 
             var go = new GameObject("crafting-speed-row", typeof(RectTransform));
             row = (RectTransform)go.transform;
@@ -82,16 +85,16 @@ namespace CraftingSpeed
             layout.childControlWidth = layout.childControlHeight = false;
             layout.childForceExpandWidth = layout.childForceExpandHeight = false;
 
-            MakeText(row, style, L("限速", "Speed limit"), 64f, TextAnchor.MiddleLeft);
-            MakeButton(row, "-", 24f, () => StepBy(-1));
+            MakeText(row, style, L("限速", "Limit"), 40f, TextAnchor.MiddleLeft);
+            MakeButton(row, "-", 22f, () => StepBy(-1));
             MakeSlider(row);
-            MakeButton(row, "+", 24f, () => StepBy(+1));
-            valueText = MakeText(row, style, "100%", 48f, TextAnchor.MiddleCenter);
-            MakeButton(row, "100%", 44f, () => Apply(SpeedLimit.Max));
-            MakeSpacer(row, 10f);
-            MakeText(row, style, L("目标", "Target"), 36f, TextAnchor.MiddleRight);
+            MakeButton(row, "+", 22f, () => StepBy(+1));
+            valueText = MakeText(row, style, "100%", 46f, TextAnchor.MiddleCenter);
+            MakeButton(row, L("重置", "Reset"), 40f, () => Apply(SpeedLimit.Max));
+            MakeSpacer(row, 8f);
+            MakeText(row, style, L("目标", "Target"), 32f, TextAnchor.MiddleRight);
             MakeTargetInput(row);
-            MakeText(row, style, L("/分钟", "/min"), 44f, TextAnchor.MiddleLeft);
+            MakeText(row, style, L("/分钟", "/min"), 40f, TextAnchor.MiddleLeft);
 
             go.SetActive(false);
         }
@@ -103,7 +106,7 @@ namespace CraftingSpeed
             var t = go.AddComponent<Text>();
             t.font = style.font;
             t.fontSize = style.fontSize;
-            t.color = style.color;
+            t.color = LabelColor; // the source text is still grey when the window is built; the game brightens it later
             t.alignment = align;
             t.horizontalOverflow = HorizontalWrapMode.Overflow;
             t.verticalOverflow = VerticalWrapMode.Overflow;
@@ -154,7 +157,7 @@ namespace CraftingSpeed
             GameObject go = Object.Instantiate(source.gameObject, parent, false);
             go.name = "slider";
             go.SetActive(true);
-            ((RectTransform)go.transform).sizeDelta = new Vector2(150f, 16f);
+            ((RectTransform)go.transform).sizeDelta = new Vector2(120f, 16f);
 
             slider = go.GetComponent<Slider>();
             slider.onValueChanged = new Slider.SliderEvent(); // drop everything wired to the options window
@@ -167,6 +170,13 @@ namespace CraftingSpeed
             // The value is shown next to the slider instead of on the small handle.
             Text handleText = slider.handleRect != null ? slider.handleRect.Find("Text")?.GetComponent<Text>() : null;
             if (handleText != null) handleText.gameObject.SetActive(false);
+            if (slider.handleRect != null)
+            {
+                // Without its number the handle is just a wide dark box; make it a thin bright bar.
+                slider.handleRect.sizeDelta = new Vector2(6f, slider.handleRect.sizeDelta.y);
+                Image handle = slider.handleRect.GetComponent<Image>();
+                if (handle != null) handle.color = new Color(1f, 1f, 1f, 0.85f);
+            }
 
             Image background = slider.transform.Find("Background")?.GetComponent<Image>();
             if (background != null) background.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
@@ -184,7 +194,7 @@ namespace CraftingSpeed
             GameObject go = Object.Instantiate(source.gameObject, parent, false);
             go.name = "target";
             go.SetActive(true);
-            ((RectTransform)go.transform).sizeDelta = new Vector2(64f, ControlHeight);
+            ((RectTransform)go.transform).sizeDelta = new Vector2(56f, ControlHeight);
 
             targetInput = go.GetComponent<InputField>();
             targetInput.onEndEdit = new InputField.EndEditEvent();
@@ -239,19 +249,19 @@ namespace CraftingSpeed
         }
 
         /// <summary>
-        /// Puts the row where the inventory starts, then moves the inventory down and makes the window
-        /// taller by one row. The game resets both every frame, so this is applied every frame too.
+        /// Puts the row where the inventory section starts (including its title line, which is drawn
+        /// above the group's own rectangle), then moves the inventory down and makes the window taller
+        /// by one row. The game resets both every frame, so this is applied every frame too.
         /// </summary>
         private static void PlaceRow(UIAssemblerWindow w)
         {
             RectTransform inv = w.playerInventoryGroup;
-            var corners = new Vector3[4];
-            inv.GetWorldCorners(corners);
-            Vector2 invTopLeft = w.windowTrans.InverseTransformPoint(corners[1]);
             Rect windowRect = w.windowTrans.rect;
+            Bounds invBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(w.windowTrans, inv);
 
-            float x = Plugin.RowOffsetX.Value;
-            float y = invTopLeft.y - windowRect.yMax + Plugin.RowOffsetY.Value;
+            // Line up with the left edge of the content above (the "增产效果" label), keep the same margin on the right.
+            float x = LeftMargin(w, windowRect) + Plugin.RowNudgeX.Value;
+            float y = invBounds.max.y - windowRect.yMax + Plugin.RowNudgeY.Value;
             row.anchoredPosition = new Vector2(x, y);
             row.sizeDelta = new Vector2(windowRect.width - x * 2f, RowHeight);
 
@@ -261,10 +271,43 @@ namespace CraftingSpeed
             if (!layoutLogged)
             {
                 layoutLogged = true;
-                Plugin.Log.LogInfo($"Window layout: window {windowRect}, inventory at {inv.anchoredPosition + new Vector2(0f, RowHeight)} " +
-                                   $"(anchors {inv.anchorMin}-{inv.anchorMax}, pivot {inv.pivot}), speedGroup {w.speedGroup.anchoredPosition}, " +
-                                   $"incInfoGroup {w.incInfoGroup.anchoredPosition} active={w.incInfoGroup.gameObject.activeSelf}, row at {row.anchoredPosition}.");
+                LogLayout(w, invBounds, windowRect);
             }
+        }
+
+        private static float LeftMargin(UIAssemblerWindow w, Rect windowRect)
+        {
+            if (w.incInfoGroup.gameObject.activeInHierarchy)
+            {
+                Bounds inc = RectTransformUtility.CalculateRelativeRectTransformBounds(w.windowTrans, w.incInfoGroup);
+                if (inc.size.x > 1f) return inc.min.x - windowRect.xMin;
+            }
+            return 39f;
+        }
+
+        /// <summary>One-time layout dump to BepInEx's log, to tune placement from a screenshot.</summary>
+        private static void LogLayout(UIAssemblerWindow w, Bounds invBounds, Rect windowRect)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append($"Window layout: window {windowRect}; inventory group pos {w.playerInventoryGroup.anchoredPosition} (before shift +{RowHeight}), ");
+            sb.Append($"bounds y {invBounds.min.y:0}..{invBounds.max.y:0}; row at {row.anchoredPosition}; ");
+            Bounds inc = RectTransformUtility.CalculateRelativeRectTransformBounds(w.windowTrans, w.incInfoGroup);
+            sb.Append($"incInfoGroup active={w.incInfoGroup.gameObject.activeSelf} y {inc.min.y:0}..{inc.max.y:0}.");
+            foreach (Text t in w.windowTrans.GetComponentsInChildren<Text>(false))
+            {
+                if (t.transform.IsChildOf(row)) continue;
+                Bounds b = RectTransformUtility.CalculateRelativeRectTransformBounds(w.windowTrans, t.transform);
+                if (b.max.y < invBounds.max.y - 60 || b.min.y > invBounds.max.y + 80) continue; // only texts around the inventory top
+                sb.Append($"\n  text '{t.text}' at y {b.min.y:0}..{b.max.y:0}, x {b.min.x:0}..{b.max.x:0}, path {PathOf(t.transform, w.windowTrans)}");
+            }
+            Plugin.Log.LogInfo(sb.ToString());
+        }
+
+        private static string PathOf(Transform t, Transform root)
+        {
+            string path = t.name;
+            for (Transform p = t.parent; p != null && p != root; p = p.parent) path = p.name + "/" + path;
+            return path;
         }
 
         [HarmonyPostfix]

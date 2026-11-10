@@ -5,12 +5,12 @@ lines where some buildings should be produced slowly, so every product line can 
 
 * Open an assembler: a "Speed limit" row sits above your inventory.
   * Drag the slider, use the `-` / `+` buttons or the mouse wheel over the row: steps of 1%, hold Shift for 10%, Ctrl for 0.1%.
-  * `100%` resets the limit.
+  * `Reset` goes back to 100%.
   * Or type a **target output per minute** and the limit is worked out for you (0.1% precision).
   * The window's own "per minute" readout shows the limited rate (orange when limited), and the status line says "limited to …".
 * It never goes above 100%; there are other mods for that.
 * The limit scales both normal crafting progress and the proliferator "extra products" progress.
-* The row's position can be nudged in `BepInEx/config/com.github.jiesiluo.assemblerspeed.cfg` (`RowOffsetX`, `RowOffsetY`).
+* The row's position can be nudged in `BepInEx/config/com.github.jiesiluo.assemblerspeed.cfg` (`RowNudgeX`, `RowNudgeY`).
 * **Blueprints keep the limits.** Copy machines into a blueprint and the pasted machines get the same limits,
   including machines that are still ghosts waiting for drones.
 * The game's own copy / paste building settings also carries the limit.
