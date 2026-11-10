@@ -1,0 +1,22 @@
+<Project>
+  <!--
+    Where the build looks for game and mod-loader assemblies.
+    Override on the command line if your paths differ, e.g.
+      dotnet build -p:DSPGameDir="E:\Games\Dyson Sphere Program" -p:BepInExDir="...\profiles\Default\BepInEx"
+  -->
+  <PropertyGroup>
+    <DSPGameDir Condition="'$(DSPGameDir)' == ''">D:\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program</DSPGameDir>
+    <BepInExDir Condition="'$(BepInExDir)' == ''">$(APPDATA)\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx</BepInExDir>
+    <ManagedDir>$(DSPGameDir)\DSPGAME_Data\Managed</ManagedDir>
+
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

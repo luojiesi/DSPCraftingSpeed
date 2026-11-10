@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>CraftingSpeedPreloader</AssemblyName>
+    <RootNamespace>CraftingSpeed</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Cecil" HintPath="$(BepInExDir)\core\Mono.Cecil.dll" Private="false" />
+    <Reference Include="BepInEx" HintPath="$(BepInExDir)\core\BepInEx.dll" Private="false" />
+  </ItemGroup>
+
+</Project>

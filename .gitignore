@@ -3,6 +3,6 @@
 *.dll
 *.rar
 *.zip
-CraftingSpeed/bin/
-CraftingSpeed/obj/
+bin/
+obj/
 Libraries/
